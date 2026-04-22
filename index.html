@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayman Sbay — Portfolio</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/ui.css">
+  <link rel="stylesheet" href="css/modals.css">
+</head>
+<body>
+
+  <!-- 3D Canvas -->
+  <canvas id="c"></canvas>
+
+  <!-- ── INTRO SCREEN ── -->
+  <div id="intro">
+    <div class="i-tag">Portfolio Interactivo</div>
+    <div class="i-name">Ayman Sbay</div>
+    <div class="i-role">Web Application Developer · Backend</div>
+    <div class="i-bar"></div>
+    <div class="i-hint">
+      <span class="ic">🖱</span> Haz clic en una isla para explorarla
+    </div>
+    <button class="i-btn" onclick="startGame()">Explorar →</button>
+  </div>
+
+  <!-- ── HUD ── -->
+  <div id="hud">
+    <div class="hud-dot"></div>
+    <span class="hud-name">Ayman Sbay</span>
+    <span class="hud-sep">|</span>
+    <span>Web Developer · Blanes, España</span>
+  </div>
+
+  <!-- ── ISLAND FLOATING LABELS ── -->
+  <div class="ilbl hidden" id="lbl-overview">    <div class="ico">🌍</div><div class="name">Vista general</div></div>
+  <div class="ilbl"        id="lbl-sobremi">     <div class="ico">👤</div><div class="name">Sobre mí</div></div>
+  <div class="ilbl"        id="lbl-estudios">    <div class="ico">📚</div><div class="name">Estudios</div></div>
+  <div class="ilbl"        id="lbl-tecnologias"> <div class="ico">💻</div><div class="name">Tecnologías</div></div>
+  <div class="ilbl"        id="lbl-experiencia"> <div class="ico">🏢</div><div class="name">Experiencia</div></div>
+  <div class="ilbl"        id="lbl-proyectos">   <div class="ico">🚀</div><div class="name">Proyectos</div></div>
+  <div class="ilbl"        id="lbl-idiomas">     <div class="ico">🌐</div><div class="name">Idiomas</div></div>
+
+  <!-- ── CLICK HINT ── -->
+  <div id="hint-click" class="hidden">
+    <div>Haz clic en la isla para ver más</div>
+  </div>
+
+  <!-- ── BOTTOM NAV ── -->
+  <div id="nav">
+    <button class="nav-btn active" id="nav-overview"    onclick="CameraController.flyTo('overview')">    <span class="nb-icon">🌍</span>General</button>
+    <button class="nav-btn"        id="nav-sobremi"     onclick="CameraController.flyTo('sobremi')">     <span class="nb-icon">👤</span>Sobre mí</button>
+    <button class="nav-btn"        id="nav-estudios"    onclick="CameraController.flyTo('estudios')">    <span class="nb-icon">📚</span>Estudios</button>
+    <button class="nav-btn"        id="nav-tecnologias" onclick="CameraController.flyTo('tecnologias')"> <span class="nb-icon">💻</span>Tech</button>
+    <button class="nav-btn"        id="nav-experiencia" onclick="CameraController.flyTo('experiencia')"> <span class="nb-icon">🏢</span>Experiencia</button>
+    <button class="nav-btn"        id="nav-proyectos"   onclick="CameraController.flyTo('proyectos')">   <span class="nb-icon">🚀</span>Proyectos</button>
+    <button class="nav-btn"        id="nav-idiomas"     onclick="CameraController.flyTo('idiomas')">     <span class="nb-icon">🌐</span>Idiomas</button>
+  </div>
+
+  <!-- ── MODAL CONTAINERS (content injected by ModalRenderer) ── -->
+  <div class="mo" id="m-sobremi"></div>
+  <div class="mo" id="m-estudios"></div>
+  <div class="mo" id="m-tecnologias"></div>
+  <div class="mo" id="m-experiencia"></div>
+  <div class="mo" id="m-proyectos"></div>
+  <div class="mo" id="m-idiomas"></div>
+
+  <!-- ── SCRIPTS ── -->
+  <!-- 1. Three.js (vendor) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- 2. Model -->
+  <script src="js/models/data.js"></script>
+
+  <!-- 3. Views -->
+  <script src="js/views/worldBuilder.js"></script>
+  <script src="js/views/modalRenderer.js"></script>
+
+  <!-- 4. Controllers -->
+  <script src="js/controllers/modalController.js"></script>
+  <script src="js/controllers/cameraController.js"></script>
+
+  <!-- 5. App entry point -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>
