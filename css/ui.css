@@ -167,3 +167,65 @@ body.zoomed #vignette { opacity: 1; }
   0%, 100% { box-shadow: 0 6px 26px rgba(0,0,0,.55), 0 0 20px rgba(77,184,212,.1); }
   50%       { box-shadow: 0 6px 26px rgba(0,0,0,.55), 0 0 32px rgba(77,184,212,.28); }
 }
+
+/* ── MOBILE ── */
+@media (max-width: 640px) {
+
+  /* HUD: hide role text, keep name only */
+  #hud {
+    top: 10px;
+    padding: 7px 16px;
+    font-size: 11px;
+    white-space: normal;
+  }
+  #hud .hud-sep,
+  #hud span:last-child { display: none; }
+
+  /* NAV: scrollable pill row */
+  #nav {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    transform: none;
+    gap: 4px;
+    padding: 5px 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    font-size: 10px;
+    min-height: 44px;
+  }
+
+  /* Language switcher: smaller, shift left to avoid HUD overlap */
+  #lang-sw {
+    top: 10px;
+    right: 10px;
+    padding: 4px 6px;
+    gap: 2px;
+  }
+  .lang-btn {
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  /* Back button: safe-area aware */
+  #back-btn {
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Island labels: slightly smaller */
+  .ilbl .ico  { font-size: 36px; }
+  .ilbl .name { font-size: 11px; padding: 6px 14px; }
+
+  /* Intro screen */
+  .i-name { font-size: clamp(34px, 9vw, 56px); }
+  .i-btn  { padding: 12px 32px; }
+}

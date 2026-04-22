@@ -8,12 +8,12 @@ const PortfolioData = {
   // ── Personal info ──────────────────────────
   personal: {
     name:     'Ayman Sbay Zekkari',
-    role:     'Web Application Developer · Backend',
+    role:     'Web Application Developer',
     location: 'Blanes de Mar, Girona, España',
     email:    'ayman.zekkari2@gmail.com',
     phone:    '+34 691 717 544',
     license:  'Carnet de conducir válido',
-    about:    'Desarrollador de aplicaciones web con experiencia en backend, formado en Institut Sa Palomera. Antes de tech trabajé en hostelería y logística — eso me dio habilidades reales de liderazgo, adaptabilidad y comunicación bajo presión.',
+    about:    'Desarrollador de aplicaciones web con experiencia en fullstack, formado en Institut Sa Palomera. Antes de tech trabajé en hostelería y logística — eso me dio habilidades reales de liderazgo, adaptabilidad y comunicación bajo presión.',
   },
 
   // ── Education ──────────────────────────────

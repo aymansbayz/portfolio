@@ -32,6 +32,11 @@ html, body {
   width: 100vw;
   height: 100vh;
   cursor: pointer;
+  touch-action: manipulation;
   transition: filter 1.4s ease;
 }
 body.zoomed #c { filter: brightness(0.82) saturate(0.72); }
+
+@media (max-width: 640px) {
+  .cf-inp, .cf-msg { font-size: 16px !important; }
+}
