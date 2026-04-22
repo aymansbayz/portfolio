@@ -18,6 +18,9 @@
   <!-- 3D Canvas -->
   <canvas id="c"></canvas>
 
+  <!-- Vignette overlay for zoom dimming -->
+  <div id="vignette"></div>
+
   <!-- ── INTRO SCREEN ── -->
   <div id="intro">
     <div class="i-tag">Portfolio Interactivo</div>
@@ -28,6 +31,20 @@
       <span class="ic">🖱</span> Haz clic en una isla para explorarla
     </div>
     <button class="i-btn" onclick="startGame()">Explorar →</button>
+  </div>
+
+  <!-- ── BACK BUTTON ── -->
+  <button id="back-btn" onclick="CameraController.flyTo('overview')" title="Volver">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+
+  <!-- ── LANGUAGE SWITCHER ── -->
+  <div id="lang-sw">
+    <button class="lang-btn active" data-lang="es" onclick="setLang('es')">🇪🇸 ES</button>
+    <button class="lang-btn"        data-lang="en" onclick="setLang('en')">🇬🇧 EN</button>
+    <button class="lang-btn"        data-lang="ca" onclick="setLang('ca')">🏴󠁥󠁳󠁣󠁴󠁿 CA</button>
   </div>
 
   <!-- ── HUD ── -->
@@ -46,11 +63,6 @@
   <div class="ilbl"        id="lbl-experiencia"> <div class="ico">🏢</div><div class="name">Experiencia</div></div>
   <div class="ilbl"        id="lbl-proyectos">   <div class="ico">🚀</div><div class="name">Proyectos</div></div>
   <div class="ilbl"        id="lbl-idiomas">     <div class="ico">🌐</div><div class="name">Idiomas</div></div>
-
-  <!-- ── CLICK HINT ── -->
-  <div id="hint-click" class="hidden">
-    <div>Haz clic en la isla para ver más</div>
-  </div>
 
   <!-- ── BOTTOM NAV ── -->
   <div id="nav">
@@ -72,6 +84,9 @@
   <div class="mo" id="m-idiomas"></div>
 
   <!-- ── SCRIPTS ── -->
+  <!-- 0. Twemoji — renders emoji as images (fixes flag display on Windows) -->
+  <script src="https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+
   <!-- 1. Three.js (vendor) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 

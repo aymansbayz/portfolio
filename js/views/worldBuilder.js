@@ -8,7 +8,7 @@
 const WorldBuilder = (() => {
 
   // ── Internal refs set by init() ──
-  let _scene, _OGeo, _origY, _aLight;
+  let _scene, _OGeo, _origY, _aLight, _plane, _planeBanner;
 
   // ── Material helpers ──────────────────────
   function lm(hex) {
@@ -289,6 +289,97 @@ const WorldBuilder = (() => {
     });
   }
 
+  // ── AIRPLANE ──────────────────────────────
+  function buildPlane() {
+    const g = new THREE.Group();
+
+    // Fuselage (cylinder along Z via rotation)
+    const fuse = new THREE.Mesh(new THREE.CylinderGeometry(.22, .28, 5.5, 8), lm(0xf0f4ff));
+    fuse.rotation.x = Math.PI / 2;
+    g.add(fuse);
+
+    // Nose cone (tip at +Z)
+    const nose = new THREE.Mesh(new THREE.ConeGeometry(.22, 1.5, 8), lm(0xe0eaff));
+    nose.rotation.x = Math.PI / 2;
+    nose.position.z = 3.25;
+    g.add(nose);
+
+    // Tail fairing
+    const tail = new THREE.Mesh(new THREE.ConeGeometry(.15, 1.0, 6), lm(0xe0eaff));
+    tail.rotation.x = -Math.PI / 2;
+    tail.position.z = -3.0;
+    g.add(tail);
+
+    // Wings
+    const wing = new THREE.Mesh(new THREE.BoxGeometry(7.0, .09, 1.6), lm(0xe4eeff));
+    wing.position.set(0, -.05, .4);
+    g.add(wing);
+
+    // Wing tip winglets
+    [-3.4, 3.4].forEach(wx => {
+      const wl = new THREE.Mesh(new THREE.BoxGeometry(.08, .55, .5), lm(0xd8e4f8));
+      wl.position.set(wx, .22, .55);
+      g.add(wl);
+    });
+
+    // Horizontal stabilisers
+    const stab = new THREE.Mesh(new THREE.BoxGeometry(2.8, .07, .7), lm(0xe0eaff));
+    stab.position.set(0, .0, -2.4);
+    g.add(stab);
+
+    // Vertical fin
+    const fin = new THREE.Mesh(new THREE.BoxGeometry(.09, 1.0, .85), lm(0xd8e4f8));
+    fin.position.set(0, .5, -2.4);
+    g.add(fin);
+
+    // Engines (under wings)
+    [-1.6, 1.6].forEach(ex => {
+      const eng = new THREE.Mesh(new THREE.CylinderGeometry(.15, .12, .9, 7), lm(0xb8c4d8));
+      eng.rotation.x = Math.PI / 2;
+      eng.position.set(ex, -.26, .35);
+      g.add(eng);
+      // inlet ring
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(.16, .025, 5, 14), lm(0x8090a8));
+      ring.rotation.x = Math.PI / 2;
+      ring.position.set(ex, -.26, .8);
+      g.add(ring);
+    });
+
+    g.position.set(55, 18, 0);
+    _scene.add(g);
+    _plane = g;
+
+    // ── Banner sprite ────────────────────────
+    const cvs = document.createElement('canvas');
+    cvs.width = 520; cvs.height = 96;
+    const ctx = cvs.getContext('2d');
+
+    ctx.fillStyle = 'rgba(6, 14, 28, 0.93)';
+    ctx.fillRect(0, 0, 520, 96);
+
+    ctx.strokeStyle = 'rgba(77, 184, 212, 0.65)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 516, 92);
+
+    ctx.fillStyle = '#4db8d4';
+    ctx.font = 'bold 22px monospace';
+    ctx.fillText('✦  Ayman Sbay \xB7 Backend Dev', 16, 33);
+
+    ctx.fillStyle = '#b8d8f0';
+    ctx.font = '17px monospace';
+    ctx.fillText('PHP  \xB7  Laravel  \xB7  React  \xB7  Java', 16, 59);
+
+    ctx.fillStyle = '#5a80a0';
+    ctx.font = '13px monospace';
+    ctx.fillText('ES \xB7 CA \xB7 EN \xB7 AR  \xB7  Disponible ✓', 16, 82);
+
+    const tex = new THREE.CanvasTexture(cvs);
+    const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true }));
+    spr.scale.set(14, 2.6, 1);
+    _scene.add(spr);
+    _planeBanner = spr;
+  }
+
   // ── PUBLIC API ────────────────────────────
   return {
     init(scene) {
@@ -298,11 +389,14 @@ const WorldBuilder = (() => {
       buildIslands();
       buildBridges();
       buildBoats();
+      buildPlane();
     },
     // Expose for animation loop
-    getOceanGeo()  { return _OGeo; },
-    getOrigY()     { return _origY; },
+    getOceanGeo()     { return _OGeo; },
+    getOrigY()        { return _origY; },
     getAntennaLight() { return _aLight; },
+    getPlane()        { return _plane; },
+    getPlaneBanner()  { return _planeBanner; },
   };
 
 })();

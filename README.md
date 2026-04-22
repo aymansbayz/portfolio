@@ -29,8 +29,6 @@ portfolio/
 Abre `index.html` en un servidor local (no vale file:// por las restricciones CORS de los módulos).
 
 ```bash
-# Con Python
-python3 -m http.server 8080
 
 # Con Node
 npx serve .

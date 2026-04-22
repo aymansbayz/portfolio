@@ -34,6 +34,8 @@ let running = false;
 
 // ── INIT ALL MODULES ────────────────────────
 WorldBuilder.init(scene);
+const _plane       = WorldBuilder.getPlane();
+const _planeBanner = WorldBuilder.getPlaneBanner();
 CameraController.init(camera, scene);
 ModalController.init();
 ModalRenderer.injectAll();
@@ -62,7 +64,63 @@ function animate() {
   const aLight = WorldBuilder.getAntennaLight();
   if (aLight) aLight.material.emissiveIntensity = .5 + Math.sin(t * 4) * .5;
 
+  // Airplane
+  const pA = t * 0.10, pR = 55, pH = 18;
+  const pX = Math.cos(pA) * pR, pZ = Math.sin(pA) * pR;
+  _plane.position.set(pX, pH, pZ);
+  _plane.lookAt(Math.cos(pA + 0.01) * pR, pH, Math.sin(pA + 0.01) * pR);
+  const bA = pA - 0.055;
+  _planeBanner.position.set(Math.cos(bA) * pR, pH - 1.2, Math.sin(bA) * pR);
+
   renderer.render(scene, camera);
+}
+
+// ── CONTACT FORM ──────────────────────────────
+function sendContact(via) {
+  const name = (document.getElementById('cf-name').value.trim()) || 'Visitante';
+  const msg  =  document.getElementById('cf-msg').value.trim();
+  if (!msg) return;
+  const d = PortfolioData;
+  if (via === 'wa') {
+    const text = encodeURIComponent('Hola Ayman! Soy ' + name + '.\n\n' + msg);
+    window.open('https://wa.me/' + d.personal.phone.replace(/\D/g,'') + '?text=' + text, '_blank');
+  } else {
+    const sub  = encodeURIComponent('Portfolio — ' + name);
+    const body = encodeURIComponent('Hola Ayman,\n\n' + msg + '\n\n— ' + name);
+    window.open('mailto:' + d.personal.email + '?subject=' + sub + '&body=' + body);
+  }
+}
+
+// ── LANGUAGE SWITCHER ─────────────────────────
+function setLang(lang) {
+  I18N.set(lang);
+  ModalRenderer.injectAll();
+
+  const navKeys = ['overview','sobremi','estudios','tecnologias','experiencia','proyectos','idiomas'];
+  navKeys.forEach(key => {
+    const btn = document.getElementById('nav-' + key);
+    if (!btn) return;
+    const ico = btn.querySelector('.nb-icon').outerHTML;
+    btn.innerHTML = ico + I18N.ui('nav_' + key);
+  });
+
+  navKeys.forEach(key => {
+    const lbl = document.getElementById('lbl-' + key);
+    if (!lbl) return;
+    const n = lbl.querySelector('.name');
+    if (n) n.textContent = I18N.ui('lbl_' + key);
+  });
+
+  const itag = document.querySelector('.i-tag');
+  if (itag) itag.textContent = I18N.ui('intro_tag');
+  const ihint = document.querySelector('.i-hint');
+  if (ihint) ihint.innerHTML = '<span class="ic">🖱</span> ' + I18N.ui('intro_hint');
+  const ibtn = document.querySelector('.i-btn');
+  if (ibtn) ibtn.textContent = I18N.ui('intro_btn');
+
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
 }
 
 // ── START ────────────────────────────────────

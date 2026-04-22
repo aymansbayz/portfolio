@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════
 //  VIEW — ModalRenderer
-//  Renders each modal's content from PortfolioData
+//  Renders each modal's content using I18N + PortfolioData
 // ═══════════════════════════════════════════════
 'use strict';
 
@@ -17,25 +17,35 @@ const ModalRenderer = (() => {
   // ── Sobre mí ────────────────────────────
   function renderSobremi() {
     const d = PortfolioData;
+    const lang = I18N.get();
+    const ph_name = lang === 'en' ? 'Your name…'    : lang === 'ca' ? 'El teu nom…'      : 'Tu nombre…';
+    const ph_msg  = lang === 'en' ? 'Your message…' : lang === 'ca' ? 'El teu missatge…' : 'Tu mensaje…';
+    const lbl_wa  = lang === 'en' ? 'Send via WhatsApp'  : lang === 'ca' ? 'Enviar per WhatsApp'   : 'Enviar por WhatsApp';
+    const lbl_em  = lang === 'en' ? 'Send via Email'     : lang === 'ca' ? 'Enviar per correu'     : 'Enviar por Email';
+    const lbl_mob = lang === 'en' ? 'Driving licence · Mobile' : lang === 'ca' ? 'Carnet · Mobilitat' : 'Carnet · Movilidad';
     return `
-      <p style="font-size:13px;line-height:2;color:var(--ink2)">${d.personal.about}</p>
-      <div class="st">Habilidades personales</div>
-      <div class="chips">${chips(d.softSkills, 'soft')}</div>
-      <div class="st">Contacto</div>
-      <div class="cr"><span class="ci">✉️</span><div><div class="csub">Email</div>
-        <div class="cv"><a href="mailto:${d.personal.email}">${d.personal.email}</a></div></div></div>
-      <div class="cr"><span class="ci">📞</span><div><div class="csub">Teléfono</div>
-        <div class="cv"><a href="tel:${d.personal.phone}">${d.personal.phone}</a></div></div></div>
-      <div class="cr"><span class="ci">📍</span><div><div class="csub">Ubicación</div>
-        <div class="cv">${d.personal.location}</div></div></div>
-      <div class="cr"><span class="ci">🚗</span><div><div class="csub">Movilidad</div>
+      <p style="font-size:15px;line-height:1.95;color:#7a9ab8">${I18N.data('about')}</p>
+      <div class="st">${I18N.sec('soft_skills')}</div>
+      <div class="chips">${chips(I18N.data('skills'), 'soft')}</div>
+      <div class="st">${I18N.sec('contact')}</div>
+      <div class="cr"><span class="ci">📍</span><div><div class="csub">${I18N.sec('loc_l')}</div>
+        <div class="cv">Blanes, Girona</div></div></div>
+      <div class="cr"><span class="ci">🚗</span><div><div class="csub">${lbl_mob}</div>
         <div class="cv">${d.personal.license}</div></div></div>
+      <div class="cf-wrap">
+        <input  class="cf-inp" id="cf-name" type="text"  placeholder="${ph_name}">
+        <textarea class="cf-msg" id="cf-msg" rows="3"    placeholder="${ph_msg}"></textarea>
+        <div class="cf-btns">
+          <button class="cf-btn cf-wa" onclick="sendContact('wa')">${lbl_wa}</button>
+          <button class="cf-btn cf-em" onclick="sendContact('email')">${lbl_em}</button>
+        </div>
+      </div>
     `;
   }
 
   // ── Estudios ─────────────────────────────
   function renderEstudios() {
-    const items = PortfolioData.estudios.map(e => `
+    const items = I18N.data('edu').map(e => `
       <div class="tli">
         <div class="tli-d">${e.date}</div>
         <div class="tli-n">${e.name}</div>
@@ -50,7 +60,7 @@ const ModalRenderer = (() => {
 
     return `
       <div class="tl">${items}</div>
-      <div class="st">Certificados</div>
+      <div class="st">${I18N.sec('certificates')}</div>
       <div class="chips">${allTech}</div>
     `;
   }
@@ -60,19 +70,19 @@ const ModalRenderer = (() => {
     const t = PortfolioData.tecnologias;
     const levels = t.levels.map(l => `
       <div class="sk">
-        <div class="sk-m"><span>${l.name}</span><span style="color:${l.color}">${l.pct >= 75 ? 'Avanzado' : 'Intermedio'}</span></div>
+        <div class="sk-m"><span>${l.name}</span><span style="color:${l.color}">${l.pct >= 75 ? I18N.sec('advanced') : I18N.sec('intermediate')}</span></div>
         <div class="sk-t"><div class="sk-f" style="width:${l.pct}%;background:${l.color}"></div></div>
       </div>
     `).join('');
 
     return `
-      <div class="st">Frontend</div>
+      <div class="st">${I18N.sec('frontend')}</div>
       <div class="chips">${chips(t.frontend, 'fe')}</div>
-      <div class="st">Backend</div>
+      <div class="st">${I18N.sec('backend')}</div>
       <div class="chips">${chips(t.backend, 'be')}</div>
-      <div class="st">Bases de datos & herramientas</div>
+      <div class="st">${I18N.sec('db_tools')}</div>
       <div class="chips">${chips(t.databases, 'db')}${chips(t.tools, 'soft')}</div>
-      <div class="st">Nivel</div>
+      <div class="st">${I18N.sec('level')}</div>
       ${levels}
     `;
   }
@@ -80,10 +90,10 @@ const ModalRenderer = (() => {
   // ── Experiencia ───────────────────────────
   function renderExperiencia() {
     const e = PortfolioData.experiencia;
-    const resp = e.responsibilities.map(r => `
+    const resp  = I18N.data('resp').map(r => `
       <div class="bi"><span class="bd">▸</span>${r}</div>
     `).join('');
-    const other = e.other.map(o => `
+    const other = I18N.data('other').map(o => `
       <div class="ec"><div class="en">${o.name}</div><div class="es">${o.desc}</div></div>
     `).join('');
 
@@ -92,12 +102,12 @@ const ModalRenderer = (() => {
         <div class="tli">
           <div class="tli-d">${e.main.date}</div>
           <div class="tli-n">${e.main.name}</div>
-          <div class="tli-p">${e.main.desc}</div>
+          <div class="tli-p">${I18N.data('exp_desc')}</div>
         </div>
       </div>
-      <div class="st">Responsabilidades</div>
+      <div class="st">${I18N.sec('resp')}</div>
       <div class="bl">${resp}</div>
-      <div class="st">Otras experiencias</div>
+      <div class="st">${I18N.sec('other_exp')}</div>
       ${other}
     `;
   }
@@ -107,8 +117,8 @@ const ModalRenderer = (() => {
     const proj = PortfolioData.proyectos.map(p => `
       <div class="pc">
         <div class="pt">${p.name}</div>
-        <div class="pd">${p.desc}</div>
-        <a href="${p.url}" target="_blank" class="pl">Ver proyecto →</a>
+        <div class="pd">${I18N.data('proj_desc')}</div>
+        <a href="${p.url}" target="_blank" class="pl">${I18N.sec('view_proj')}</a>
       </div>
     `).join('');
 
@@ -116,15 +126,15 @@ const ModalRenderer = (() => {
       ${proj}
       <div class="coming">
         <div style="font-size:22px;margin-bottom:7px">🌱</div>
-        <div style="font-weight:600;margin-bottom:3px">Más proyectos en camino</div>
-        <div style="font-size:11px;opacity:.6">Vuelve pronto</div>
+        <div style="font-size:16px;font-weight:600;margin-bottom:4px;color:#dce8f5">${I18N.sec('more_coming')}</div>
+        <div style="font-size:13px;opacity:.6">${I18N.sec('check_back')}</div>
       </div>
     `;
   }
 
   // ── Idiomas ───────────────────────────────
   function renderIdiomas() {
-    const cards = PortfolioData.idiomas.map(l => `
+    const cards = I18N.data('langs').map(l => `
       <div class="lc">
         <div class="lf">${l.flag}</div>
         <div class="ln">${l.name}</div>
@@ -134,41 +144,48 @@ const ModalRenderer = (() => {
 
     return `
       <div class="lg">${cards}</div>
-      <p style="font-size:12px;color:var(--ink2);margin-top:14px;line-height:1.8">
-        4 idiomas: ventaja clave para equipos internacionales y proyectos multilingüe.
+      <p style="font-size:14px;color:#7a9ab8;margin-top:16px;line-height:1.85">
+        ${I18N.sec('lang_note')}
       </p>
     `;
   }
 
   // ── Public: inject all modals ────────────
   function injectAll() {
-    const modals = {
-      sobremi:     { icon: '👤', eyebrow: 'Hello world',   title: 'Ayman Sbay Zekkari', content: renderSobremi() },
-      estudios:    { icon: '📚', eyebrow: 'Formación',      title: 'Estudios',           content: renderEstudios() },
-      tecnologias: { icon: '💻', eyebrow: 'Stack',          title: 'Tecnologías',        content: renderTecnologias() },
-      experiencia: { icon: '🏢', eyebrow: 'Trayectoria',    title: 'Experiencia',        content: renderExperiencia() },
-      proyectos:   { icon: '🚀', eyebrow: 'Work',           title: 'Proyectos',          content: renderProyectos() },
-      idiomas:     { icon: '🌐', eyebrow: 'Comunicación',   title: 'Idiomas',            content: renderIdiomas() },
+    const defs = {
+      sobremi:     { icon: '👤', fn: renderSobremi },
+      estudios:    { icon: '📚', fn: renderEstudios },
+      tecnologias: { icon: '💻', fn: renderTecnologias },
+      experiencia: { icon: '🏢', fn: renderExperiencia },
+      proyectos:   { icon: '🚀', fn: renderProyectos },
+      idiomas:     { icon: '🌐', fn: renderIdiomas },
     };
 
-    Object.entries(modals).forEach(([key, m]) => {
+    Object.entries(defs).forEach(([key, d]) => {
       const el = document.getElementById('m-' + key);
       if (!el) return;
+      const m = I18N.modal(key);
       el.innerHTML = `
         <div class="mb">
           <div class="mh">
-            <div class="mh-ico">${m.icon}</div>
+            <div class="mh-ico">${d.icon}</div>
             <div class="mh-t">
-              <div class="mh-ey">${m.eyebrow}</div>
-              <div class="mh-ti">${m.title}</div>
+              <div class="mh-ey">${m.ey}</div>
+              <div class="mh-ti">${m.ti}</div>
             </div>
             <button class="mcl" onclick="ModalController.close('${key}')">✕</button>
           </div>
-          <div class="mbody">${m.content}</div>
+          <div class="mbody">${d.fn()}</div>
         </div>
       `;
     });
   }
 
-  return { injectAll };
+  function parseTwemoji() {
+    if (typeof twemoji !== 'undefined') {
+      twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+    }
+  }
+
+  return { injectAll: () => { injectAll(); parseTwemoji(); } };
 })();

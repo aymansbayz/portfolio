@@ -18,6 +18,7 @@ const CameraController = (() => {
   const camLookAt  = new THREE.Vector3();
 
   let autoAngle    = 0;
+  let _openTimer   = null;
 
   const raycaster  = new THREE.Raycaster();
   const mouse      = new THREE.Vector2();
@@ -28,9 +29,17 @@ const CameraController = (() => {
 
   // ── FLY TO ──────────────────────────────
   function flyTo(key) {
-    if (key === currentView && camT >= 1) return;
     const cfg = CAM_CONFIGS[key];
     if (!cfg) return;
+
+    // Cancel any pending auto-open
+    if (_openTimer) { clearTimeout(_openTimer); _openTimer = null; }
+
+    // If already there and settled, open modal directly
+    if (key === currentView && camT >= 1) {
+      if (key !== 'overview') ModalController.open(key);
+      return;
+    }
 
     camFrom.pos    = _camera.position.clone();
     camFrom.target = camLookAt.clone();
@@ -45,16 +54,18 @@ const CameraController = (() => {
     const nb = document.getElementById('nav-' + key);
     if (nb) nb.classList.add('active');
 
-    // hint text
-    const hint = document.getElementById('hint-click');
-    if (key !== 'overview') {
-      hint.classList.remove('hidden');
-      hint.children[0].textContent = 'Haz clic en la isla para ver más';
-    } else {
-      hint.classList.add('hidden');
-    }
+    // zoom dimming
+    document.body.classList.toggle('zoomed', key !== 'overview');
 
     ModalController.closeAll();
+
+    // Auto-open modal once camera arrives
+    if (key !== 'overview') {
+      _openTimer = setTimeout(() => {
+        if (currentView === key) ModalController.open(key);
+        _openTimer = null;
+      }, CAM_DUR * 1000 + 200);
+    }
   }
 
   // ── BUILD CLICK DISCS ────────────────────
@@ -79,12 +90,7 @@ const CameraController = (() => {
     raycaster.setFromCamera(mouse, _camera);
     const hits = raycaster.intersectObjects(Object.values(clickDiscs));
     if (!hits.length) return;
-    const key = hits[0].object.userData.key;
-    if (currentView === key && camT >= 1) {
-      ModalController.open(key);
-    } else {
-      flyTo(key);
-    }
+    flyTo(hits[0].object.userData.key);
   }
 
   // ── LABEL PROJECTION ─────────────────────
