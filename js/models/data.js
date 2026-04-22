@@ -70,7 +70,7 @@ const PortfolioData = {
     {
       name: 'Gleam',
       desc: 'Proyecto actual en desarrollo. Visítalo en vivo para explorar las funcionalidades.',
-      url:  'https://coral-raven-610098.hostingersite.com/gleam',
+      url:  'https://slateblue-cat-348405.hostingersite.com/',
     },
   ],
 
