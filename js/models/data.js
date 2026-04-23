@@ -69,8 +69,13 @@ const PortfolioData = {
   proyectos: [
     {
       name: 'Gleam',
-      desc: 'Proyecto actual en desarrollo. Visítalo en vivo para explorar las funcionalidades.',
+      desc: 'Tienda online de productos (Proyecto final de DAW).',
       url:  'https://slateblue-cat-348405.hostingersite.com/',
+    },
+    { 
+      name: 'Librarium', 
+      desc: 'Biblioteca digital de libros, con sistema importación de libros y lectura.', 
+      url: 'https://librarium-project.vercel.app' 
     },
   ],
 
